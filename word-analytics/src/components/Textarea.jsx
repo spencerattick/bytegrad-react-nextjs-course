@@ -16,7 +16,6 @@ export default function Textarea({text, setText}) {
       setWarningText("");
     }
     setText(newText);
-    console.log("text:", text);
   };
   return (
     <div className="textarea">
