@@ -16,9 +16,4 @@ export const initialItems = [
   },
 ];
 
-export const secondaryButtons = [
-  "Mark All Complete",
-  "Mark All Incomplete",
-  "Reset to Initial",
-  "Remove All Items",
-];
+
