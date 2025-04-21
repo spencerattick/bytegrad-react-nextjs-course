@@ -28,21 +28,18 @@ function App() {
     });
     setItems(allComplete);
   };
-
   const handleMarkAllIncomplete = () => {
     const allComplete = items.map((item) => {
       return { ...item, packed: false };
     });
     setItems(allComplete);
   };
-
   const handleDeleteItem = (item) => {
     const removedItemArr = items.filter((itemToCheck) => {
       return itemToCheck.id !== item.id;
     });
     setItems(removedItemArr);
   };
-
   const handleTogglePackedCheckbox = (item) => {
     const updatedItems = items.map((itemToCheck) => {
       if (itemToCheck.id === item.id) {
@@ -54,12 +51,15 @@ function App() {
     });
     setItems(updatedItems);
   };
+  const checkedItemsNum = items.filter((item) => {
+    return item.packed
+  });
 
   return (
     <>
       <BackgroundHeading />
       <main>
-        <Header />
+      <Header itemCount={items.length} checkedItemsNum={checkedItemsNum.length}/>
         <ItemList
           items={items}
           handleDeleteItem={handleDeleteItem}
