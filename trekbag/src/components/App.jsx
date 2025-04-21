@@ -36,18 +36,35 @@ function App() {
     setItems(allComplete);
   };
 
-  const handleDeleteItem = item => {
+  const handleDeleteItem = (item) => {
     const removedItemArr = items.filter((itemToCheck) => {
-      return itemToCheck.id !== item.id
-    })
-    setItems(removedItemArr)
-  }
+      return itemToCheck.id !== item.id;
+    });
+    setItems(removedItemArr);
+  };
+
+  const handleTogglePackedCheckbox = (item) => {
+    const updatedItems = items.map((itemToCheck) => {
+      if (itemToCheck.id === item.id) {
+        itemToCheck.packed = !itemToCheck.packed;
+        return itemToCheck;
+      } else {
+        return itemToCheck;
+      }
+    });
+    setItems(updatedItems);
+  };
+
   return (
     <>
       <BackgroundHeading />
       <main>
         <Header />
-        <ItemList items={items} handleDeleteItem={handleDeleteItem}/>
+        <ItemList
+          items={items}
+          handleDeleteItem={handleDeleteItem}
+          handleTogglePackedCheckbox={handleTogglePackedCheckbox}
+        />
         <Sidebar
           handleAddItem={handleAddItem}
           handleRemoveAllItems={handleRemoveAllItems}
