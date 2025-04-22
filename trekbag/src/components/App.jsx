@@ -3,11 +3,13 @@ import Footer from "./Footer";
 import Header from "./Header";
 import ItemList from "./ItemList";
 import Sidebar from "./Sidebar";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { initialItems } from "../lib/constants";
 
 function App() {
-  const [items, setItems] = useState(initialItems);
+  const [items, setItems] = useState(() => {
+    return JSON.parse(localStorage.getItem("items")) || initialItems;
+  });
   const handleAddItem = (newItemText) => {
     const newItem = {
       name: newItemText,
@@ -52,14 +54,21 @@ function App() {
     setItems(updatedItems);
   };
   const checkedItemsNum = items.filter((item) => {
-    return item.packed
+    return item.packed;
   });
+
+  useEffect(() => {
+    localStorage.setItem("items", JSON.stringify(items));
+  }, [items]);
 
   return (
     <>
       <BackgroundHeading />
       <main>
-      <Header itemCount={items.length} checkedItemsNum={checkedItemsNum.length}/>
+        <Header
+          itemCount={items.length}
+          checkedItemsNum={checkedItemsNum.length}
+        />
         <ItemList
           items={items}
           handleDeleteItem={handleDeleteItem}
