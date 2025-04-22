@@ -1,10 +1,9 @@
-import { useContext } from "react";
+import { useItemsContext } from "../lib/hooks";
 import Counter from "./Counter";
 import Logo from "./Logo";
-import { ItemsContext } from "../contexts/ItemsContextProvider";
 
 export default function Header() {
-  const {items, checkedItemsNum} = useContext(ItemsContext)
+  const {items, checkedItemsNum} = useItemsContext()
   return (
     <header>
         <Logo />
