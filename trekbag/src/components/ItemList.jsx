@@ -1,6 +1,8 @@
 import Select from "react-select";
 import EmptyView from "./EmptyView";
-import { useState } from "react";
+import { useState, useMemo } from "react";
+import { useContext } from "react";
+import { ItemsContext } from "../contexts/ItemsContextProvider";
 
 const sortingOptions = [
   { label: "sort by default", value: "default" },
@@ -8,13 +10,11 @@ const sortingOptions = [
   { label: "sort by unpacked", value: "unpacked" },
 ];
 
-export default function ItemList({
-  items,
-  handleDeleteItem,
-  handleTogglePackedCheckbox,
-}) {
+export default function ItemList() {
     const [sortBy, setSortBy] = useState('default')
-    const sortedItems = [...items].sort((a, b) => {
+    const {items, handleDeleteItem, handleTogglePackedCheckbox} = useContext(ItemsContext)
+
+    const sortedItems = useMemo(() => [...items].sort((a, b) => {
         if (sortBy === 'packed') {
             return b.packed - a.packed
         }
@@ -24,7 +24,7 @@ export default function ItemList({
         }
 
         return
-    })
+    }), [items, sortBy])
   return (
     <ul className="item-list">
       {items.length === 0 && <EmptyView />}
