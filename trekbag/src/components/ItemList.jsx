@@ -1,7 +1,7 @@
 import Select from "react-select";
 import EmptyView from "./EmptyView";
 import { useState, useMemo } from "react";
-import { useItemsContext } from "../lib/hooks";
+import { useItemsStore } from "../stores/itemsStore";
 
 const sortingOptions = [
   { label: "sort by default", value: "default" },
@@ -10,26 +10,38 @@ const sortingOptions = [
 ];
 
 export default function ItemList() {
-    const [sortBy, setSortBy] = useState('default')
-    const {items, handleDeleteItem, handleTogglePackedCheckbox} = useItemsContext()
+  const [sortBy, setSortBy] = useState("default");
+  const items = useItemsStore((state) => state.items);
+  const deleteItem = useItemsStore((state) => state.deleteItem);
+  const toggleItem = useItemsStore((state) => state.toggleItem);
 
-    const sortedItems = useMemo(() => [...items].sort((a, b) => {
-        if (sortBy === 'packed') {
-            return b.packed - a.packed
+  const sortedItems = useMemo(
+    () =>
+      [...items].sort((a, b) => {
+        if (sortBy === "packed") {
+          return b.packed - a.packed;
         }
 
-        if (sortBy === 'unpacked') {
-            return a.packed - b.packed
+        if (sortBy === "unpacked") {
+          return a.packed - b.packed;
         }
 
-        return
-    }), [items, sortBy])
+        return;
+      }),
+    [items, sortBy]
+  );
   return (
     <ul className="item-list">
       {items.length === 0 && <EmptyView />}
       {items.length > 1 && (
         <section className="sorting">
-          <Select options={sortingOptions} defaultValue={sortingOptions[0]} onChange={option => {setSortBy(option.value)}}/>
+          <Select
+            options={sortingOptions}
+            defaultValue={sortingOptions[0]}
+            onChange={(option) => {
+              setSortBy(option.value);
+            }}
+          />
         </section>
       )}
       {sortedItems.map((item) => {
@@ -37,8 +49,8 @@ export default function ItemList() {
           <Item
             key={item.id}
             item={item}
-            handleDeleteItem={handleDeleteItem}
-            handleTogglePackedCheckbox={handleTogglePackedCheckbox}
+            deleteItem={deleteItem}
+            toggleItem={toggleItem}
           />
         );
       })}
@@ -46,7 +58,7 @@ export default function ItemList() {
   );
 }
 
-function Item({ item, handleDeleteItem, handleTogglePackedCheckbox }) {
+function Item({ item, deleteItem, toggleItem }) {
   return (
     <li className="item">
       <label>
@@ -54,14 +66,14 @@ function Item({ item, handleDeleteItem, handleTogglePackedCheckbox }) {
           type="checkbox"
           checked={item.packed}
           onChange={() => {
-            handleTogglePackedCheckbox(item);
+            toggleItem(item.id);
           }}
         />
         {item.name}
       </label>
       <button
         onClick={() => {
-          handleDeleteItem(item);
+          deleteItem(item.id);
         }}
       >
         ❌

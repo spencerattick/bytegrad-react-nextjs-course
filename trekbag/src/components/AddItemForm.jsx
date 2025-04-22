@@ -1,8 +1,10 @@
 import { useState, useRef } from "react";
 import Button from "./Button";
+import { useItemsStore } from "../stores/itemsStore";
 
-export default function AddItemForm({ handleAddItem }) {
-    const inputRef = useRef()
+export default function AddItemForm() {
+  const addItem = useItemsStore((state) => state.addItem);
+  const inputRef = useRef();
   const [itemText, setItemText] = useState("");
 
   const handleOnChange = (event) => {
@@ -12,14 +14,13 @@ export default function AddItemForm({ handleAddItem }) {
   const handleOnSubmit = (event) => {
     event.preventDefault();
 
-
     if (!itemText) {
       alert("Please give the item a name");
-      inputRef.current.focus()
+      inputRef.current.focus();
       return;
     }
-    handleAddItem(itemText)
-    setItemText('')
+    addItem(itemText);
+    setItemText("");
   };
 
   return (
