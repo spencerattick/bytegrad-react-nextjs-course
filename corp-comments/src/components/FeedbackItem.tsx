@@ -4,7 +4,9 @@ type FeedbackItem = {
   upvoteCount: number;
   companyName: string;
   text: string;
+  badgeLetter: string;
   daysAgo: number;
+  id: number;
 };
 
 type FeedbackItemProps = {
@@ -21,7 +23,7 @@ export default function FeedbackItem({
         <span>{feedbackItem.upvoteCount}</span>
       </button>
       <div>
-        <p>B</p>
+        <p>{feedbackItem.badgeLetter}</p>
       </div>
       <div>
         <p>{feedbackItem.companyName}</p>
