@@ -50,7 +50,7 @@ function App() {
   return (
     <div className="app">
       <Footer />
-      <Container isLoading={isLoading} errorMessage={errorMessage} feedbackItems={feedbackItems}/>
+      <Container isLoading={isLoading} errorMessage={errorMessage} feedbackItems={feedbackItems} handleAppFeedback={handleAddFeedback}/>
       <HashtagList />
     </div>
   );
