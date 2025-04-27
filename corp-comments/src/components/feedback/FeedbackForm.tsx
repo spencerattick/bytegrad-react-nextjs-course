@@ -2,11 +2,13 @@ import { useState } from "react";
 import { MAX_CHARACTERS } from "../../lib/constants";
 
 type FeedbackFormProps = {
-  handleAppFeedback: (text: string) => void;
+  handleAddFeedback: (text: string) => void;
 };
 
-export default function FeedbackForm({ handleAppFeedback }: FeedbackFormProps) {
+export default function FeedbackForm({ handleAddFeedback }: FeedbackFormProps) {
   const [text, setText] = useState("");
+  const [showValidIndicator, setShowValidIndicator] = useState(false);
+  const [showInvalidIndicator, setShowInvalidIndicator] = useState(false);
 
   const remainingCharCount = MAX_CHARACTERS - text.length;
 
@@ -23,12 +25,29 @@ export default function FeedbackForm({ handleAppFeedback }: FeedbackFormProps) {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    handleAppFeedback(text);
+    if (text.includes("#") && text.length >= 5) {
+      setShowValidIndicator(true);
+      setTimeout(() => {
+        setShowValidIndicator(false);
+      }, 2000);
+    } else {
+      setShowInvalidIndicator(true);
+      setTimeout(() => {
+        setShowInvalidIndicator(false);
+      }, 2000);
+      return;
+    }
+    handleAddFeedback(text);
     setText("");
   };
 
   return (
-    <form className="form" onSubmit={handleSubmit}>
+    <form
+      className={`form ${showValidIndicator ? "form--valid" : ""} ${
+        showInvalidIndicator ? "form--invalid" : ""
+      }`}
+      onSubmit={handleSubmit}
+    >
       <textarea
         onChange={handleTextOnChange}
         value={text}

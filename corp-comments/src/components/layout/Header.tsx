@@ -1,19 +1,17 @@
+import { useFeedbackItemsContext } from "../../lib/hooks";
 import FeedbackForm from "../feedback/FeedbackForm";
 import Logo from "../Logo";
 import PageHeading from "../PageHeading";
 import Pattern from "../Pattern";
 
-type HeaderProps = {
-  handleAppFeedback: (text: string) => void;
-};
-
-export default function Header({ handleAppFeedback }: HeaderProps) {
+export default function Header() {
+  const { handleAddFeedback } = useFeedbackItemsContext();
   return (
     <header>
       <Pattern />
       <Logo />
       <PageHeading />
-      <FeedbackForm handleAppFeedback={handleAppFeedback} />
+      <FeedbackForm handleAddFeedback={handleAddFeedback} />
     </header>
   );
 }
