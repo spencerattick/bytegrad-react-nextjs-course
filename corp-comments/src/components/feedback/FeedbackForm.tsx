@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { MAX_CHARACTERS } from "../lib/constants";
+import { MAX_CHARACTERS } from "../../lib/constants";
 
 type FeedbackFormProps = {
   handleAppFeedback: (text: string) => void;
@@ -25,7 +25,7 @@ export default function FeedbackForm({ handleAppFeedback }: FeedbackFormProps) {
     event.preventDefault();
     handleAppFeedback(text);
     setText("");
-  }
+  };
 
   return (
     <form className="form" onSubmit={handleSubmit}>

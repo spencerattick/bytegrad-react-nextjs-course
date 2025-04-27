@@ -1,13 +1,11 @@
 import { TriangleUpIcon } from "@radix-ui/react-icons";
-import { type TFeedbackItem } from "../lib/types";
+import { type TFeedbackItem } from "../../lib/types";
 
 type FeedbackItemProps = {
   feedbackItem: TFeedbackItem;
 };
 
-export default function FeedbackItem({
-  feedbackItem
-}: FeedbackItemProps) {
+export default function FeedbackItem({ feedbackItem }: FeedbackItemProps) {
   return (
     <li className="feedback">
       <button>

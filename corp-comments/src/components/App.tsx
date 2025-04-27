@@ -1,8 +1,8 @@
-import Container from "./Container";
-import Footer from "./Footer";
+import Footer from "./layout/Footer";
 import HashtagList from "./HashtagList";
 import { type TFeedbackItem } from "../lib/types";
 import { useEffect, useState } from "react";
+import Container from "./layout/Container";
 
 function App() {
   const [feedbackItems, setFeedbackItems] = useState<TFeedbackItem[]>([]);
