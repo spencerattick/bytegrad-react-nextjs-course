@@ -1,7 +1,7 @@
 import Footer from "./layout/Footer";
 import HashtagList from "../hashtag/HashtagList";
 import { type TFeedbackItem } from "../lib/types";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Container from "./layout/Container";
 
 function App() {
@@ -10,12 +10,20 @@ function App() {
   const [errorMessage, setErrorMessage] = useState("");
   const [selectedCompany, setSelectedCompany] = useState("");
 
-  const filteredFeedbackItems = selectedCompany ? feedbackItems.filter(
-    (item) => item.company === selectedCompany
-  ) : feedbackItems;
+  const filteredFeedbackItems = useMemo(
+    () =>
+      selectedCompany
+        ? feedbackItems.filter((item) => item.company === selectedCompany)
+        : feedbackItems,
+    [feedbackItems, selectedCompany]
+  );
 
-  const companyList = feedbackItems.map((item) => item.company).filter(
-    (company, index, array) => array.indexOf(company) === index
+  const companyList = useMemo(
+    () =>
+      feedbackItems
+        .map((item) => item.company)
+        .filter((company, index, array) => array.indexOf(company) === index),
+    [feedbackItems]
   );
 
   const handleAddFeedback = async (text: string) => {
@@ -40,7 +48,7 @@ function App() {
         body: JSON.stringify(newItem),
         headers: {
           "Content-Type": "application/json",
-          "Accept": "application/json"
+          Accept: "application/json",
         },
       }
     );
@@ -80,7 +88,10 @@ function App() {
         feedbackItems={filteredFeedbackItems}
         handleAppFeedback={handleAddFeedback}
       />
-      <HashtagList companyList={companyList} handleCompanyClick={handleCompanyClick} />
+      <HashtagList
+        companyList={companyList}
+        handleCompanyClick={handleCompanyClick}
+      />
     </div>
   );
 }
