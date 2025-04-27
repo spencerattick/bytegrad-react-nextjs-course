@@ -33,34 +33,31 @@ export default function FeedbackItemsContextProvider({
         .filter((company, index, array) => array.indexOf(company) === index),
     [feedbackItems]
   );
+  //     .split(" ")
+  //     .find((word) => word.startsWith("#"))!
+  //     .substring(1);
 
-  const handleAddFeedback = async (text: string) => {
-    const companyName = text
-      .split(" ")
-      .find((word) => word.startsWith("#"))!
-      .substring(1);
-
-    const newItem: TFeedbackItem = {
-      id: new Date().getTime(),
-      badgeLetter: companyName?.substring(0, 1).toUpperCase(),
-      company: companyName,
-      daysAgo: 0,
-      text,
-      upvoteCount: 0,
-    };
-    setFeedbackItems([...feedbackItems, newItem]);
-    await fetch(
-      "https://bytegrad.com/course-assets/projects/corpcomment/api/feedbacks",
-      {
-        method: "POST",
-        body: JSON.stringify(newItem),
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-      }
-    );
-  };
+  //   const newItem: TFeedbackItem = {
+  //     id: new Date().getTime(),
+  //     badgeLetter: companyName?.substring(0, 1).toUpperCase(),
+  //     company: companyName,
+  //     daysAgo: 0,
+  //     text,
+  //     upvoteCount: 0,
+  //   };
+  //   setFeedbackItems([...feedbackItems, newItem]);
+  //   await fetch(
+  //     "https://bytegrad.com/course-assets/projects/corpcomment/api/feedbacks",
+  //     {
+  //       method: "POST",
+  //       body: JSON.stringify(newItem),
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //         Accept: "application/json",
+  //       },
+  //     }
+  //   );
+  // };
 
   const filteredFeedbackItems = useMemo(
     () =>
@@ -69,10 +66,6 @@ export default function FeedbackItemsContextProvider({
         : feedbackItems,
     [feedbackItems, selectedCompany]
   );
-
-  const handleCompanyClick = (company: string) => {
-    setSelectedCompany(company);
-  };
 
   return (
     <FeedbackItemsContext.Provider
