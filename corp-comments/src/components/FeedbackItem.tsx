@@ -18,7 +18,7 @@ export default function FeedbackItem({
         <p>{feedbackItem.badgeLetter}</p>
       </div>
       <div>
-        <p>{feedbackItem.companyName}</p>
+        <p>{feedbackItem.company}</p>
         <p>{feedbackItem.text}</p>
       </div>
       <p>{feedbackItem.daysAgo}d</p>
