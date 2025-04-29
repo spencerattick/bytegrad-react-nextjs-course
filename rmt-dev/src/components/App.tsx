@@ -1,4 +1,3 @@
-import React from "react";
 import Background from "./Background";
 import Header from "./Header";
 import Container from "./Container";

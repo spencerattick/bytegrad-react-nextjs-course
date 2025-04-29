@@ -1,7 +1,6 @@
 import Logo from "./Logo";
 import BookmarksButton from "./BookmarksButton";
 import SearchForm from "./SearchForm";
-import React from "react";
 
 export default function Header() {
   return (
