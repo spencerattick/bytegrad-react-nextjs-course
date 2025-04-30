@@ -2,7 +2,7 @@ import Background from "./Background";
 import Header, { HeaderTop } from "./Header";
 import Container from "./Container";
 import Footer from "./Footer";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import BookmarksButton from "./BookmarksButton";
 import SearchForm from "./SearchForm";
 import Logo from "./Logo";
@@ -17,7 +17,7 @@ import { useJobItems } from "../lib/hooks";
 function App() {
   const [searchText, setSearchText] = useState("");
 
-  const {jobItems, isLoading} = useJobItems(searchText);
+  const [jobItems, isLoading] = useJobItems(searchText);
 
   return (
     <>
