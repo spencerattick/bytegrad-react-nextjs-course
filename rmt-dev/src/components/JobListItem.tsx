@@ -1,10 +1,9 @@
 import BookmarkIcon from "./BookmarkIcon";
-import { JobItem } from "../../lib/types";
+import { JobItem } from "../lib/types";
 
 type JobListItemProps = {
   jobItem: JobItem;
-}
-  
+};
 
 export default function JobListItem({ jobItem }: JobListItemProps) {
   return (
