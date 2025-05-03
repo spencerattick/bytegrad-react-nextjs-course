@@ -1,22 +1,26 @@
 import { useEffect, useState } from "react";
-import { JobItem, jobItemsExpanded } from "../lib/types";
+import { JobItem } from "../lib/types";
 import { BASE_API_URL } from "./constants";
+import { useQuery } from "@tanstack/react-query";
 
 export function useJobItem(id: number | null) {
-  const [jobItem, setJobItem] = useState<jobItemsExpanded | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      setIsLoading(true);
-      if (!id) return;
+  const { data, isLoading } = useQuery(
+    ["job-item", id],
+    async () => {
       const response = await fetch(`${BASE_API_URL}/${id}`);
       const data = await response.json();
-      setIsLoading(false);
-      setJobItem(data.jobItem);
-    };
-    fetchData();
-  }, [id]);
+      return data;
+    },
+    {
+      staleTime: 1000 * 60, // 1 minute
+      refetchOnWindowFocus: false,
+      retry: false,
+      enabled: !!id, // Only run the query if id is not null
+      onError: () => {},
+    }
+  );
+
+  const jobItem = data?.jobItem;
   return { jobItem, isLoading } as const;
 }
 
@@ -61,15 +65,14 @@ export function useJobItems(searchText: string) {
 export function useDebounce<T>(value: T, delay = 500): T {
   const [debouncedValue, setDebouncedValue] = useState(value);
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedValue(value);
+    }, delay);
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [value, delay]);
 
-    useEffect(() => {
-     const timer = setTimeout(() => {
-        setDebouncedValue(value);
-      }, delay);
-      return () => {
-        clearTimeout(timer);
-      };
-    }, [value, delay]);
-
-    return debouncedValue;
+  return debouncedValue;
 }
