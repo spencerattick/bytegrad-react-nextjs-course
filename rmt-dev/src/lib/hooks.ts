@@ -6,7 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 type JobItemApiResponse = {
   public: boolean;
   jobItem: jobItemsExpanded;
-}
+};
 
 const fetchJobItem = async (id: number): Promise<JobItemApiResponse> => {
   const response = await fetch(`${BASE_API_URL}/${id}`);
@@ -33,9 +33,7 @@ export function useJobItem(id: number | null) {
     }
   );
 
-  const jobItem = data?.jobItem;
-  const isLoading = isInitialLoading
-  return { jobItem, isLoading } as const;
+  return { jobItem: data?.jobItem, isLoading: isInitialLoading } as const;
 }
 
 export function useActiveId() {
@@ -54,26 +52,30 @@ export function useActiveId() {
   return activeId;
 }
 
+type JobItemsApiResponse = {
+  public: boolean;
+  sorted: boolean;
+  jobItems: JobItem[];
+}
+
+const fetchJobItems = async (searchText: string): Promise<JobItemsApiResponse> => {
+  const res = await fetch(`${BASE_API_URL}?search=${searchText}`);
+  const data = await res.json();
+  return data;
+};
+
 export function useJobItems(searchText: string) {
-  const [jobItems, setJobItems] = useState<JobItem[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const { data, isInitialLoading } = useQuery(["job-items", searchText], () => fetchJobItems(searchText), {
+    staleTime: 1000 * 60, // 1 minute
+    refetchOnWindowFocus: false,
+    retry: false,
+    enabled: !!searchText, // Only run the query if searchText is not null
+    onError: (error) => {
+      console.error("Error fetching job item:", error);
+    },
+  });
 
-  const jobItemsSliced = jobItems.slice(0, 7);
-  const totalNumberOfResults = jobItems.length;
-
-  useEffect(() => {
-    if (!searchText) return;
-
-    const fetchData = async () => {
-      setIsLoading(true);
-      const res = await fetch(`${BASE_API_URL}?search=${searchText}`);
-      const data = await res.json();
-      setIsLoading(false);
-      setJobItems(data.jobItems);
-    };
-    fetchData();
-  }, [searchText]);
-  return { jobItemsSliced, isLoading, totalNumberOfResults } as const;
+  return {jobItems: data?.jobItems, isLoading: isInitialLoading} as const;
 }
 
 export function useDebounce<T>(value: T, delay = 500): T {
