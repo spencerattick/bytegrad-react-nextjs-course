@@ -10,6 +10,10 @@ type JobItemApiResponse = {
 
 const fetchJobItem = async (id: number): Promise<JobItemApiResponse> => {
   const response = await fetch(`${BASE_API_URL}/${id}`);
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.description || "Failed to fetch job item");
+  }
   const data = await response.json();
   return data;
 };
@@ -23,7 +27,9 @@ export function useJobItem(id: number | null) {
       refetchOnWindowFocus: false,
       retry: false,
       enabled: !!id, // Only run the query if id is not null
-      onError: () => {},
+      onError: (error) => {
+        console.error("Error fetching job item:", error);
+      },
     }
   );
 
