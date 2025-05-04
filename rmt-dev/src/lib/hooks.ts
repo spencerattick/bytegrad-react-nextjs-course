@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { JobItem, jobItemsExpanded } from "../lib/types";
 import { BASE_API_URL } from "./constants";
 import { useQuery } from "@tanstack/react-query";
-import toast from "react-hot-toast";
+import { handleError } from "./utils";
 
 type JobItemApiResponse = {
   public: boolean;
@@ -28,9 +28,7 @@ export function useJobItem(id: number | null) {
       refetchOnWindowFocus: false,
       retry: false,
       enabled: !!id, // Only run the query if id is not null
-      onError: (error) => {
-        console.error("Error fetching job item:", error);
-      },
+      onError: handleError
     }
   );
 
@@ -75,9 +73,7 @@ export function useJobItems(searchText: string) {
     refetchOnWindowFocus: false,
     retry: false,
     enabled: !!searchText, // Only run the query if searchText is not null
-    onError: (error) => {
-      toast.error("Error fetching job items: " + error.message );
-    },
+    onError: handleError,
   });
 
   return {jobItems: data?.jobItems, isLoading: isInitialLoading} as const;
