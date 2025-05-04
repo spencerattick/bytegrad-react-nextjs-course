@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { JobItem, jobItemsExpanded } from "../lib/types";
 import { BASE_API_URL } from "./constants";
 import { useQuery } from "@tanstack/react-query";
+import toast from "react-hot-toast";
 
 type JobItemApiResponse = {
   public: boolean;
@@ -59,8 +60,12 @@ type JobItemsApiResponse = {
 }
 
 const fetchJobItems = async (searchText: string): Promise<JobItemsApiResponse> => {
-  const res = await fetch(`${BASE_API_URL}?search=${searchText}`);
-  const data = await res.json();
+  const response = await fetch(`${BASE_API_URL}?search=${searchText}`);
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.description || "Failed to fetch job items");
+  }
+  const data = await response.json();
   return data;
 };
 
@@ -71,7 +76,7 @@ export function useJobItems(searchText: string) {
     retry: false,
     enabled: !!searchText, // Only run the query if searchText is not null
     onError: (error) => {
-      console.error("Error fetching job item:", error);
+      toast.error("Error fetching job items: " + error.message );
     },
   });
 
