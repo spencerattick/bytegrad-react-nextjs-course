@@ -49,7 +49,7 @@ function App() {
             <SortingControls />
           </SidebarTop>
           <JobList jobItems={jobItemsSliced} isLoading={isLoading} />
-          <PaginationControls onClick={handlePageChange} nextPage={currentPage + 1} previousPage={Math.max(currentPage - 1, 1)}/>
+          <PaginationControls onClick={handlePageChange} currentPage={currentPage}/>
         </Sidebar>
         <JobItemContent />
       </Container>
