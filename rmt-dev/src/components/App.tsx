@@ -41,6 +41,7 @@ function App() {
   const totalNumberOfResults = jobItems?.length || 0;
   const totalNumberOfPages = Math.ceil(totalNumberOfResults / RESULTS_PER_PAGE);
 
+
   const handlePageChange = (direction: PageDirection) => {
     if (direction === "next") {
       setCurrentPage((prev) => prev + 1);
