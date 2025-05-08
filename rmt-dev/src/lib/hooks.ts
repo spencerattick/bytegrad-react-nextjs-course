@@ -28,7 +28,7 @@ export function useJobItem(id: number | null) {
       refetchOnWindowFocus: false,
       retry: false,
       enabled: !!id, // Only run the query if id is not null
-      onError: handleError
+      onError: handleError,
     }
   );
 
@@ -55,9 +55,11 @@ type JobItemsApiResponse = {
   public: boolean;
   sorted: boolean;
   jobItems: JobItem[];
-}
+};
 
-const fetchJobItems = async (searchText: string): Promise<JobItemsApiResponse> => {
+const fetchJobItems = async (
+  searchText: string
+): Promise<JobItemsApiResponse> => {
   const response = await fetch(`${BASE_API_URL}?search=${searchText}`);
   if (!response.ok) {
     const errorData = await response.json();
@@ -68,15 +70,19 @@ const fetchJobItems = async (searchText: string): Promise<JobItemsApiResponse> =
 };
 
 export function useJobItems(searchText: string) {
-  const { data, isInitialLoading } = useQuery(["job-items", searchText], () => fetchJobItems(searchText), {
-    staleTime: 1000 * 60, // 1 minute
-    refetchOnWindowFocus: false,
-    retry: false,
-    enabled: !!searchText, // Only run the query if searchText is not null
-    onError: handleError,
-  });
+  const { data, isInitialLoading } = useQuery(
+    ["job-items", searchText],
+    () => fetchJobItems(searchText),
+    {
+      staleTime: 1000 * 60, // 1 minute
+      refetchOnWindowFocus: false,
+      retry: false,
+      enabled: !!searchText, // Only run the query if searchText is not null
+      onError: handleError,
+    }
+  );
 
-  return {jobItems: data?.jobItems, isLoading: isInitialLoading} as const;
+  return { jobItems: data?.jobItems, isLoading: isInitialLoading } as const;
 }
 
 export function useDebounce<T>(value: T, delay = 500): T {
@@ -92,4 +98,16 @@ export function useDebounce<T>(value: T, delay = 500): T {
   }, [value, delay]);
 
   return debouncedValue;
+}
+
+export function useLocalStorage(key: string, initialValue) {
+  const [value, setValue] = useState(() =>
+    JSON.parse(localStorage.getItem(key) || JSON.stringify(initialValue))
+  );
+
+  useEffect(() => {
+    localStorage.setItem(key, JSON.stringify(value));
+  }, [value, key]);
+
+  return [value, setValue] as const;
 }
