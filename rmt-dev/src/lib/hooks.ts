@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { JobItem, jobItemsExpanded } from "../lib/types";
 import { BASE_API_URL } from "./constants";
-import { useQuery } from "@tanstack/react-query";
+import { useQueries, useQuery } from "@tanstack/react-query";
 import { handleError } from "./utils";
 import { BookmarksContext } from "../contexts/BookmarksContextProvider";
 
@@ -70,7 +70,7 @@ const fetchJobItems = async (
   return data;
 };
 
-export function useJobItems(searchText: string) {
+export function useSearchQuery(searchText: string) {
   const { data, isInitialLoading } = useQuery(
     ["job-items", searchText],
     () => fetchJobItems(searchText),
@@ -101,7 +101,10 @@ export function useDebounce<T>(value: T, delay = 500): T {
   return debouncedValue;
 }
 
-export function useLocalStorage<T>(key: string, initialValue: T): [T, React.Dispatch<React.SetStateAction<T>>] {
+export function useLocalStorage<T>(
+  key: string,
+  initialValue: T
+): [T, React.Dispatch<React.SetStateAction<T>>] {
   const [value, setValue] = useState(() =>
     JSON.parse(localStorage.getItem(key) || JSON.stringify(initialValue))
   );
@@ -117,9 +120,31 @@ export function useBookmarksContext() {
   const context = useContext(BookmarksContext);
 
   if (!context) {
-    throw new Error("useBookmarksContext must be used within a BookmarksContextProvider");
+    throw new Error(
+      "useBookmarksContext must be used within a BookmarksContextProvider"
+    );
   }
 
   return context;
 }
 
+export function useJobItems(ids: number[]) {
+  const results = useQueries({
+    queries: ids.map((id) => ({
+      queryKey: ["job-item", id],
+      queryFn: () => fetchJobItem(id),
+      staleTime: 1000 * 60, // 1 minute
+      refetchOnWindowFocus: false,
+      retry: false,
+      enabled: !!id, // Only run the query if id is not null
+      onError: handleError,
+    })),
+  });
+  const jobItems = results
+    .map((result) => result.data?.jobItem)
+    .filter((jobItem) => jobItem !== undefined);
+
+  const isLoading = results.some(result => result.isLoading);
+
+  return { jobItems, isLoading } as const;
+}
