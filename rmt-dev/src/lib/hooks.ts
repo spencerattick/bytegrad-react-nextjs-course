@@ -144,7 +144,26 @@ export function useJobItems(ids: number[]) {
     .map((result) => result.data?.jobItem)
     .filter((jobItem) => jobItem !== undefined) as jobItemsExpanded[];
 
-  const isLoading = results.some(result => result.isLoading);
+  const isLoading = results.some((result) => result.isLoading);
 
   return { jobItems, isLoading } as const;
+}
+
+export function useOnClickOutside(
+  refs: React.RefObject<HTMLElement>[],
+  handler: () => void
+) {
+  useEffect(() => {
+    const handleClick = (e: MouseEvent) => {
+      if (refs.every((ref) => !ref.current?.contains(e.target as Node))) {
+        handler();
+      }
+    };
+
+    document.addEventListener("click", handleClick);
+
+    return () => {
+      document.removeEventListener("click", handleClick);
+    };
+  }, [refs, handler]);
 }
