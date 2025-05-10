@@ -1,14 +1,9 @@
-import { useActiveId, useJobItem } from "../lib/hooks";
-// import { jobItemsExpanded } from "../lib/types";
+import { useActiveIdContext, useJobItem } from "../lib/hooks";
 import BookmarkIcon from "./BookmarkIcon";
 import Spinner from "./Spinner";
 
-// type JobItemContentProps = {
-//   jobItem: jobItemsExpanded | null;
-// };
-
 export default function JobItemContent() {
-  const activeId = useActiveId();
+  const { activeId } = useActiveIdContext();
   const { jobItem, isLoading } = useJobItem(activeId);
 
   if (isLoading) {
@@ -33,7 +28,7 @@ export default function JobItemContent() {
             <div className="job-info__below-badge">
               <time className="job-info__time">{jobItem.daysAgo}d</time>
 
-              <BookmarkIcon id={jobItem.id}/>
+              <BookmarkIcon id={jobItem.id} />
             </div>
           </div>
 
