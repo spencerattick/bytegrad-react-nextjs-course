@@ -6,14 +6,24 @@ type EventsPageProps = {
   };
 };
 
-export default function EventsPage({params}: EventsPageProps) {
+export default async function EventsPage({ params }: EventsPageProps) {
   const { city } = params;
+
+  const response = await fetch(
+    `https://bytegrad.com/course-assets/projects/evento/api/events?city=${city}`
+  );
+  const data = await response.json();
+  console.log(data);
+
   return (
     <main className="flex flex-col items-center py-24 px-[20px] min-h-[110vh]">
       <H1>
-        {city === 'all' && 'All Events'}
-        {city !== 'all' && `Events in ${city[0].toUpperCase() + city.slice(1)}`}
-        </H1>
+        {city === "all" && "All Events"}
+        {city !== "all" && `Events in ${city[0].toUpperCase() + city.slice(1)}`}
+      </H1>
+      {data.map((event) => {
+        return <section key={event.id}>{event.name}</section>;
+      })}
     </main>
-  )
+  );
 }
