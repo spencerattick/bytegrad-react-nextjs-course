@@ -6,6 +6,10 @@ const nextConfig = {
                 hostname: 'bytegrad.com',
                 protocol: 'https',
             },
+            {
+                hostname: 'images.unsplash.com',
+                protocol: 'https',
+            },
         ],
     }
 }
