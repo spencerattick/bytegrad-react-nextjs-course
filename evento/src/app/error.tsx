@@ -17,8 +17,8 @@ export default function Error({
 
   return (
     <main className="text-center py-24">
-      <H1 className="mb-5">Something went wrong!</H1>
-      {/* <H1>{error.message}</H1> */}
+      {/* <H1 className="mb-5">Something went wrong!</H1> */}
+      <H1>{error.message}</H1>
       <button
         onClick={
           // Attempt to recover by trying to re-render the segment
