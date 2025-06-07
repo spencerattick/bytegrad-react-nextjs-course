@@ -8,7 +8,7 @@ import Image from "next/image";
 export default function PetList() {
     const { pets, selectedPetId, handleChangeSelectedPetId } = usePetContext();
   return (
-    <ul className="bg-white border-b border-black/[0.08]">
+    <ul className="bg-white border-b border-light">
       {pets.map((pet) => (
         <li key={pet.id}>
           <button onClick={() => handleChangeSelectedPetId(pet.id)} className={cn("flex items-center h-[70px] w-full cursor-pointer px-5 text-base gap-3 hover:bg-[#EFF1F2] focus:bg-[#EFF1F2] transition", {
