@@ -8,10 +8,24 @@ export default function PetDetails() {
   const { selectedPet } = usePetContext();
   return (
     <section className="flex flex-col w-full h-full">
-      <TopBar pet={selectedPet} />
-      <OtherInfo pet={selectedPet} />
-      <Notes pet={selectedPet} />
+      {!selectedPet ? (
+        <EmptyView />
+      ) : (
+        <>
+          <TopBar pet={selectedPet} />
+          <OtherInfo pet={selectedPet} />
+          <Notes pet={selectedPet} />
+        </>
+      )}
     </section>
+  );
+}
+
+function EmptyView() {
+  return (
+    <p className="h-full flex justify-center items-center text-2xl font-medium">
+      No Pet Selected
+    </p>
   );
 }
 
