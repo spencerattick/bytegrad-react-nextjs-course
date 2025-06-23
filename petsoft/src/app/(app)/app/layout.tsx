@@ -4,6 +4,7 @@ import AppFooter from "@/components/app-footer";
 import AppHeader from "@/components/app-header";
 import BackgroundPattern from "@/components/background-pattern";
 import prisma from "@/lib/db";
+import { Toaster } from "@/components/ui/sonner";
 
 export default async function Layout({
   children,
@@ -11,13 +12,6 @@ export default async function Layout({
   children: React.ReactNode;
 }) {
   const pets = await prisma.pet.findMany()
-  // const response = await fetch(
-  //   "https://bytegrad.com/course-assets/projects/petsoft/api/pets"
-  // );
-  // if (!response.ok) {
-  //   throw new Error("Failed to fetch pets");
-  // }
-  // const data: Pet[] = await response.json();
   return (
     <>
       <BackgroundPattern />
@@ -31,6 +25,7 @@ export default async function Layout({
 
         <AppFooter />
       </div>
+      <Toaster position="top-right"/>
     </>
   );
 }
