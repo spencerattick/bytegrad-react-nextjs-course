@@ -20,10 +20,31 @@ export async function addPet(formData) {
     });
   } catch (error) {
     return {
-      message: "Error adding pet"
-    }
+      message: "Error adding pet",
+    };
   }
 
+  revalidatePath("/app", "layout");
+}
+
+export async function editPet(petId, formData) {
+  await sleep(2000);
+  try {
+    await prisma.pet.update({
+      where: { id: petId },
+      data: {
+        name: formData.get("name"),
+        ownerName: formData.get("ownerName"),
+        imageUrl: formData.get("imageUrl"),
+        age: parseInt(formData.get("age")),
+        notes: formData.get("notes"),
+      },
+    });
+  } catch (error) {
+    return {
+      message: "Error updating pet",
+    };
+  }
 
   revalidatePath("/app", "layout");
 }

@@ -1,5 +1,4 @@
-import { addPet } from "@/actions/actions";
-import { Button } from "./ui/button";
+import { addPet, editPet } from "@/actions/actions";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { Textarea } from "./ui/textarea";
@@ -21,11 +20,20 @@ export default function PetForm({
   return (
     <form
       action={async (formData) => {
-        const error = await addPet(formData);
-        if (error) {
-          toast.warning(error.message || "Error adding pet");
-          return
+        if (actionType === "add") {
+          const error = await addPet(formData);
+          if (error) {
+            toast.warning(error.message || "Error adding pet");
+            return;
+          }
+        } else if (actionType === "edit") {
+          const error = await editPet(selectedPet?.id, formData);
+          if (error) {
+            toast.warning(error.message || "Error adding pet");
+            return;
+          }
         }
+
         onFormSubmission();
       }}
       className="flex flex-col"
@@ -85,7 +93,7 @@ export default function PetForm({
         </div>
       </div>
 
-     <PetFormBtn actionType={actionType} />
+      <PetFormBtn actionType={actionType} />
     </form>
   );
 }
