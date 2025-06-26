@@ -5,6 +5,7 @@ import { Textarea } from "./ui/textarea";
 import { usePetContext } from "@/lib/hooks";
 import PetFormBtn from "./pet-form-btn";
 import { toast } from "sonner";
+import { on } from "events";
 
 type PetFormProps = {
   actionType: "add" | "edit";
@@ -20,6 +21,8 @@ export default function PetForm({
   return (
     <form
       action={async (formData) => {
+        onFormSubmission();
+        
         const petData = {
           name: formData.get("name") as string,
           ownerName: formData.get("ownerName") as string,
@@ -34,8 +37,6 @@ export default function PetForm({
         } else if (actionType === "edit") {
           await handleEditPet(selectedPet!.id, petData);
         }
-
-        onFormSubmission();
       }}
       className="flex flex-col"
     >

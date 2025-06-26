@@ -33,7 +33,12 @@ export default function PetContextProvider({
   children,
 }: PetContextProviderProps) {
   // state
-  const [optimisticPets, setOptimisticPets] = useOptimistic(data);
+  const [optimisticPets, setOptimisticPets] = useOptimistic(data, (state, newPet) => {
+    return [...state, {
+      ...newPet,
+      id: Math.random().toString()
+    }]
+  });
   const [selectedPetId, setSelectedPetId] = useState<string | null>(null);
 
   // derived state
@@ -56,6 +61,7 @@ export default function PetContextProvider({
   };
 
   const handleAddPet = async (newPet: Omit<Pet, "id">) => {
+    setOptimisticPets(newPet)
     const error = await addPet(newPet);
     if (error) {
       toast.warning(error.message || "Error adding pet");
