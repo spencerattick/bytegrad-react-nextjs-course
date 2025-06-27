@@ -1,11 +1,9 @@
 "use client";
 
 import { usePetContext } from "@/lib/hooks";
-import { Pet } from "@/lib/types";
 import Image from "next/image";
 import PetButton from "./pet-button";
-import { deletePet } from "@/actions/actions";
-import { useTransition } from "react";
+import { Pet } from "@prisma/client";
 
 export default function PetDetails() {
   const { selectedPet } = usePetContext();
@@ -38,7 +36,7 @@ type Props = {
 
 function TopBar({ pet }: Props) {
   const { handleCheckoutPet } = usePetContext(); // Ensure context is used to avoid hydration errors
-  const [isPending, startTransition] = useTransition();
+
   return (
     <div className="flex items-center bg-white px-8 py-5 border-b border-light">
       <Image
@@ -53,7 +51,6 @@ function TopBar({ pet }: Props) {
         <PetButton actionType="edit">Edit</PetButton>
         <PetButton
           actionType="checkout"
-          disabled={isPending}
           onClick={async () => await handleCheckoutPet(pet.id)}
         >
           Checkout
@@ -70,11 +67,11 @@ function OtherInfo({ pet }: Props) {
         <h3 className="text-[13px] font-medium uppercase text-zinc-700">
           Owner Name
         </h3>
-        <p className="mt-1 text-lg text-zinc-800">{pet?.ownerName}</p>
+        <p className="mt-1 text-lg text-zinc-800">{pet.ownerName}</p>
       </div>
       <div>
         <h3 className="text-[13px] font-medium uppercase text-zinc-700">Age</h3>
-        <p className="mt-1 text-lg text-zinc-800">{pet?.age}</p>
+        <p className="mt-1 text-lg text-zinc-800">{pet.age}</p>
       </div>
     </div>
   );
