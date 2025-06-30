@@ -5,6 +5,7 @@ import { usePetContext } from "@/lib/hooks";
 import PetFormBtn from "./pet-form-btn";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 type PetFormProps = {
   actionType: "add" | "edit";
@@ -33,7 +34,7 @@ const petFormSchema = z.object({
     z.literal(""),
     z.string().trim().url("Invalid URL format"),
   ]),
-  age: z
+  age: z.coerce
     .number()
     .int()
     .positive()
@@ -54,7 +55,9 @@ export default function PetForm({
     register,
     trigger,
     formState: { errors },
-  } = useForm<TPetForm>();
+  } = useForm<TPetForm>({
+    resolver: zodResolver(petFormSchema),
+  });
 
   return (
     <form
