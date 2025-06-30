@@ -6,46 +6,14 @@ import PetFormBtn from "./pet-form-btn";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { get } from "http";
+import { DEFAULT_PET_IMAGE } from "@/lib/constants";
+import { petFormSchema, TPetForm } from "@/lib/validations";
 
 type PetFormProps = {
   actionType: "add" | "edit";
   onFormSubmission: () => void;
 };
-
-// type TPetForm = {
-//   name: string;
-//   ownerName: string;
-//   imageUrl: string;
-//   age: number;
-//   notes: string;
-// };
-
-const petFormSchema = z.object({
-  name: z
-    .string()
-    .trim()
-    .min(1, "Name is required")
-    .max(100, "Name must be less than 100 characters"),
-  ownerName: z
-    .string()
-    .min(1, "Owner name is required")
-    .max(100, "Owner name must be less than 100 characters"),
-  imageUrl: z.union([
-    z.literal(""),
-    z.string().trim().url("Invalid URL format"),
-  ]),
-  age: z.coerce
-    .number()
-    .int()
-    .positive()
-    .max(100, "Age must be a positive integer less than or equal to 100"),
-  notes: z.union([
-    z.literal(""),
-    z.string().trim().max(1000, "Notes must be less than 1000 characters"),
-  ]),
-});
-
-type TPetForm = z.infer<typeof petFormSchema>;
 
 export default function PetForm({
   actionType,
@@ -56,6 +24,7 @@ export default function PetForm({
   const {
     register,
     trigger,
+    getValues,
     formState: { errors },
   } = useForm<TPetForm>({
     resolver: zodResolver(petFormSchema),
@@ -63,22 +32,16 @@ export default function PetForm({
 
   return (
     <form
-      action={async (formData) => {
+      action={async () => {
         const result = await trigger();
         if (!result) {
           return;
         }
         onFormSubmission();
 
-        const petData = {
-          name: formData.get("name") as string,
-          ownerName: formData.get("ownerName") as string,
-          imageUrl:
-            (formData.get("imageUrl") as string) ||
-            "https://bytegrad.com/course-assets/react-nextjs/pet-placeholder.png",
-          age: Number(formData.get("age")),
-          notes: formData.get("notes") as string,
-        };
+        const petData = getValues()
+        petData.imageUrl = petData.imageUrl || DEFAULT_PET_IMAGE;
+
         if (actionType === "add") {
           await handleAddPet(petData);
         } else if (actionType === "edit") {
