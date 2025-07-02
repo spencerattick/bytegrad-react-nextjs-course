@@ -47,7 +47,7 @@ export async function editPet(petId: unknown, newPetData: unknown) {
   try {
     await prisma.pet.update({
       where: { id: validatedPetId.data },
-      data: validatedPet,
+      data: validatedPet.data,
     });
   } catch (error) {
     return {
