@@ -59,10 +59,20 @@ export async function editPet(petId: unknown, newPetData: unknown) {
 }
 
 export async function deletePet(petId: unknown) {
+
+  const validatedPetId = petIdSchema.safeParse(petId);
+
+  if (!validatedPetId.success) {
+    return {
+      message: "Invalid pet data",
+      // errors: validatedPet.error.errors,
+    };
+  }
+
   await sleep(1000);
   try {
     await prisma.pet.delete({
-      where: { id: petId },
+      where: { id: validatedPetId.data },
     });
   } catch (error) {
     return {
