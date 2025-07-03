@@ -40,6 +40,7 @@ export async function editPet(petId: unknown, newPetData: unknown) {
   if (!validatedPetId.success || !validatedPet.success) {
     return {
       message: "Invalid pet data",
+      // should the error be more specific?
     };
   }
 
