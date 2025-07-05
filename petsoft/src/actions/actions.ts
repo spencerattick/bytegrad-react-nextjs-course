@@ -51,6 +51,7 @@ export async function editPet(petId: unknown, newPetData: unknown) {
   } catch (error) {
     return {
       message: "Error updating pet",
+      //return something here
     };
   }
 
