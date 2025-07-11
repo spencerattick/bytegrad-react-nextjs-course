@@ -17,24 +17,32 @@ const config = {
         });
         if (!user) {
           console.log("No user found with the given email");
-          return null
+          return null;
         }
-        const passwordMatch = await bcrypt.compare(password, user.hashedPassword)
+        const passwordMatch = await bcrypt.compare(
+          password,
+          user.hashedPassword
+        );
         if (!passwordMatch) {
           console.log("Invalid password");
           return null;
         }
-        return user
+        return user;
       },
     }),
   ],
   callbacks: {
-    authorized: ({ request }) => {
+    authorized: ({ auth, request }) => {
+      const isLoggedIn = Boolean(auth?.user);
       const isTryingToAccessApp = request.nextUrl.pathname.includes("/app");
-      if (isTryingToAccessApp) {
-        return false;
-      } else {
-        return true;
+      if (isTryingToAccessApp && !isLoggedIn) {
+        return false; // Redirect to login if trying to access app without being logged in
+      }
+      if (isLoggedIn && isTryingToAccessApp) {
+        return true; // Allow access to app if logged in
+      }
+      if (!isTryingToAccessApp) {
+        return true; // Allow access to other pages without login
       }
     },
   },
