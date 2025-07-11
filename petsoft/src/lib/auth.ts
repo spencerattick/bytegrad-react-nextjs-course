@@ -11,6 +11,7 @@ const config = {
     Credentials({
       async authorize(credentials) {
         const { email, password } = credentials;
+        console.log("CCREDENTIALSS RECEIVEDD", credentials);
         const user = await prisma.user.findUnique({
           where: { email },
         });
@@ -32,8 +33,9 @@ const config = {
       const isTryingToAccessApp = request.nextUrl.pathname.includes("/app");
       if (isTryingToAccessApp) {
         return false;
+      } else {
+        return true;
       }
-      return true;
     },
   },
 } satisfies NextAuthConfig;
