@@ -36,13 +36,13 @@ const config = {
       const isLoggedIn = Boolean(auth?.user);
       const isTryingToAccessApp = request.nextUrl.pathname.includes("/app");
       if (isTryingToAccessApp && !isLoggedIn) {
-        return false; // Redirect to login if trying to access app without being logged in
+        return false; 
       }
       if (isLoggedIn && isTryingToAccessApp) {
-        return true; // Allow access to app if logged in
+        return true; 
       }
       if (!isTryingToAccessApp) {
-        return true; // Allow access to other pages without login
+        return true; 
       }
     },
   },
