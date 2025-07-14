@@ -9,6 +9,8 @@ export default async function Page() {
   if (!session?.user) {
     redirect("/login");
   }
+
+
   return (
     <main>
       <H1 className="my-8 text-white">Your Account</H1>
