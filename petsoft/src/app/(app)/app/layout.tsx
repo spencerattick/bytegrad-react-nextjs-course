@@ -5,13 +5,23 @@ import AppHeader from "@/components/app-header";
 import BackgroundPattern from "@/components/background-pattern";
 import prisma from "@/lib/db";
 import { Toaster } from "@/components/ui/sonner";
+import { auth } from "@/lib/auth";
+import { redirect } from "next/navigation";
 
 export default async function Layout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const pets = await prisma.pet.findMany()
+  const session = await auth();
+  if (!session?.user) {
+    redirect("/login");
+  }
+  const pets = await prisma.pet.findMany({
+    where: {
+      userId: session.user.id,
+    },
+  });
   return (
     <>
       <BackgroundPattern />
@@ -25,7 +35,7 @@ export default async function Layout({
 
         <AppFooter />
       </div>
-      <Toaster position="top-right"/>
+      <Toaster position="top-right" />
     </>
   );
 }
