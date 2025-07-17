@@ -36,29 +36,32 @@ const config = {
       const isLoggedIn = Boolean(auth?.user);
       const isTryingToAccessApp = request.nextUrl.pathname.includes("/app");
       if (isTryingToAccessApp && !isLoggedIn) {
-        return false; 
+        return false;
       }
       if (isLoggedIn && isTryingToAccessApp) {
-        return true; 
+        return true;
       }
       if (isLoggedIn && !isTryingToAccessApp) {
-        return Response.redirect(new URL("/app/dashboard", request.nextUrl)); 
+        return Response.redirect(new URL("/app/dashboard", request.nextUrl));
       }
       if (!isLoggedIn && !isTryingToAccessApp) {
         return true;
       }
-      return false
+      return false;
     },
-    jwt: ({token, user}) => {
+    jwt: ({ token, user }) => {
       if (user) {
         token.userId = user.id;
       }
       return token;
     },
     session: ({ session, token }) => {
-      session.user.id = token.userId;
+      if (session.user) {
+        session.user.id = token.userId;
+      }
+
       return session;
-    }
+    },
   },
 } satisfies NextAuthConfig;
 
