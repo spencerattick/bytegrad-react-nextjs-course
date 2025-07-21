@@ -32,4 +32,9 @@ export const petFormSchema = z.object({
   }))
   
   export type TPetForm = z.infer<typeof petFormSchema>;
+
+  export const authSchema = z.object({
+    email: z.string().email("Invalid email format").max(100, "Email must be less than 100 characters"),
+    password: z.string().max(100, "Password must be less than 100 characters"),
+  })
   

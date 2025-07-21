@@ -1,19 +1,33 @@
 "use server";
 
-import { auth, signIn, signOut } from "@/lib/auth";
+import { signIn, signOut } from "@/lib/auth";
 import prisma from "@/lib/db";
 import { checkAuth, getPetById } from "@/lib/server-utils";
 import { sleep } from "@/lib/utils";
-import { petFormSchema, petIdSchema } from "@/lib/validations";
+import { authSchema, petFormSchema, petIdSchema } from "@/lib/validations";
 import bcrypt from "bcryptjs";
-import { get } from "http";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 // ----- user actions -----
 
-export async function logIn(formData: FormData) {
-  await signIn("credentials", formData);
+export async function logIn(formData: unknown) {
+  if (!(formData instanceof FormData)) {
+    return {
+      message: "Invalid form data",
+    };
+  }
+  const formDataObject = Object.fromEntries(formData.entries());
+  const validatedFormDataObject = await authSchema.safeParseAsync(
+    formDataObject
+  );
+  if (!validatedFormDataObject.success) {
+    return {
+      message: "Invalid email or password",
+    };
+  }
+  await signIn("credentials", validatedFormDataObject.data);
+  redirect("/app/dashboard");
 }
 
 export async function logOut() {
@@ -84,7 +98,7 @@ export async function editPet(petId: unknown, newPetData: unknown) {
     };
   }
 
-const pet = await getPetById(validatedPetId.data);
+  const pet = await getPetById(validatedPetId.data);
 
   if (!pet) {
     return {
