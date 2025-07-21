@@ -38,3 +38,4 @@ export const petFormSchema = z.object({
     password: z.string().max(100, "Password must be less than 100 characters"),
   })
   
+  export type TAuth = z.infer<typeof authSchema>;

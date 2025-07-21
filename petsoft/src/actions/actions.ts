@@ -17,16 +17,8 @@ export async function logIn(formData: unknown) {
       message: "Invalid form data",
     };
   }
-  const formDataObject = Object.fromEntries(formData.entries());
-  const validatedFormDataObject = await authSchema.safeParseAsync(
-    formDataObject
-  );
-  if (!validatedFormDataObject.success) {
-    return {
-      message: "Invalid email or password",
-    };
-  }
-  await signIn("credentials", validatedFormDataObject.data);
+
+  await signIn("credentials", formData);
   redirect("/app/dashboard");
 }
 

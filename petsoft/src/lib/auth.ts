@@ -4,6 +4,7 @@ import prisma from "./db";
 import bcrypt from "bcryptjs";
 import { get } from "http";
 import { getUserByEmail } from "./server-utils";
+import { authSchema } from "./validations";
 
 const config = {
   pages: {
@@ -12,7 +13,13 @@ const config = {
   providers: [
     Credentials({
       async authorize(credentials) {
-        const { email, password } = credentials;
+          const validatedFormData = await authSchema.safeParseAsync(
+            credentials
+          );
+          if (!validatedFormData.success) {
+            return null
+          }
+        const { email, password } = validatedFormData.data;
 
         const user = await getUserByEmail(email);
         if (!user) {
