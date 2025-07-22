@@ -5,6 +5,7 @@ import prisma from "@/lib/db";
 import { checkAuth, getPetById } from "@/lib/server-utils";
 import { sleep } from "@/lib/utils";
 import { authSchema, petFormSchema, petIdSchema } from "@/lib/validations";
+import { Prisma } from "@prisma/client";
 import bcrypt from "bcryptjs";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
@@ -12,6 +13,7 @@ import { redirect } from "next/navigation";
 // ----- user actions -----
 
 export async function logIn(formData: unknown) {
+  await sleep(1000);
   if (!(formData instanceof FormData)) {
     return {
       message: "Invalid form data",
@@ -27,6 +29,7 @@ export async function logOut() {
 }
 
 export async function signUp(formData: unknown) {
+  await sleep(1000);
   if (!(formData instanceof FormData)) {
     return {
       message: "Invalid form data",
@@ -44,12 +47,27 @@ export async function signUp(formData: unknown) {
 
   const hashedPassword = await bcrypt.hash(password, 10);
 
-  await prisma.user.create({
-    data: {
-      email,
-      hashedPassword,
-    },
-  });
+  try {
+    await prisma.user.create({
+      data: {
+        email,
+        hashedPassword,
+      },
+    });
+  } catch (error) {
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      if (error.code === "P2002") {
+        // Unique constraint failed
+        return {
+          message: "Email already exists",
+        };
+      }
+
+    }
+    return {
+      message: "Error creating user",
+    };
+  }
 
   await signIn("credentials", formData);
 }
