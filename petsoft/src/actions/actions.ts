@@ -36,11 +36,7 @@ export async function logIn(prevState: unknown, formData: unknown) {
           };
       }
     }
-
-    redirect("/app/dashboard");
-    return {
-      message: "Could not sign in",
-    };
+    throw error;
   }
 }
 
