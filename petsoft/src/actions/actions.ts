@@ -209,7 +209,7 @@ export async function deletePet(petId: unknown) {
 export async function createCheckoutSession() {
   const session = await checkAuth();
   const checkoutSession = await stripe.checkout.sessions.create({
-    email: session.user.email,
+    customer_email: session.user.email,
     line_items: [{ price: "price_1RoT4QD4akI371gZNm9lGbWX", quantity: 1 }],
     mode: "payment",
     success_url: `${process.env.CANONICAL_URL}/payment?success=true`,
