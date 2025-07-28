@@ -35,7 +35,6 @@ const config = {
     }),
   ],
   callbacks: {
-    //auth logic
     authorized: ({ auth, request }) => {
       const isLoggedIn = Boolean(auth?.user);
       const isTryingToAccessApp = request.nextUrl.pathname.includes("/app");
