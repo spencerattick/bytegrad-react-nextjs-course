@@ -1,7 +1,16 @@
+import prisma from '@/lib/db'
+
 export async function POST(request: Request) {
-    const body = await request.text();
-    console.log("Received body:", body);
+  const data = await request.json();
 
-    return Response.json(null, {status: 200});
+  await prisma.user.update({
+    where: {
+        email: data.data.object.customer_email
+    },
+    data: {
+      hasAccess: true,
+    },
+  });
 
+  return Response.json(null, { status: 200 });
 }
