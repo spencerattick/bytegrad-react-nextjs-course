@@ -6,8 +6,8 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url  	    = env("DATABASE_URL")
 }
 
 model User {
@@ -31,4 +31,19 @@ model Pet {
   createdAt DateTime @default(now())
   user      User     @relation(fields: [userId], references: [id])
   userId    String
+}
+
+//using same db for Petsoft and Evento
+model EventoEvent {
+  id            Int      @id @default(autoincrement())
+  name          String
+  slug          String   @unique
+  city          String
+  location      String
+  date          DateTime
+  organizerName String
+  imageUrl      String
+  description   String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 }
